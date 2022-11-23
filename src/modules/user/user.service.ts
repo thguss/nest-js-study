@@ -1,24 +1,21 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { UserCreateRequestDto } from './dto/user-create-req-dto';
 
 @Injectable()
 export class UserService {
-  // 유저 생성
-  async createUser(body) {
-    return body;
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(createUserDto: UserCreateRequestDto) {
+    await this.prismaService.user.create({
+      data: {
+        userName: createUserDto.name,
+        email: createUserDto.email,
+      },
+    });
   }
 
-  // 유저 조회
-  async getUsers() {
-    return ['aag', 'adf', 23, 'aws'];
-  }
-
-  // 유저 업데이트
-  async updateUser(userId, body) {
-    return 'updated!';
-  }
-
-  // 유저 삭제
-  async deleteUser(userId) {
-    return 'deleted!';
+  async findAll() {
+    return await this.prismaService.user.findMany({});
   }
 }
